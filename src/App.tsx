@@ -1,20 +1,24 @@
 import { globalCss } from "@stitches/react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Loading from "./pages/Loading";
 import Login from "./pages/Login";
 
+const queryClient = new QueryClient();
 
 function App() {
 	globalStyles();
 	return (
 		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/login" element={<Login />} />
-			</Routes>
-
-		</BrowserRouter>
+			<QueryClientProvider client={queryClient} >
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/login" element={<Login />} />
+				</Routes>
+				<ReactQueryDevtools initialIsOpen={false} />
+			</QueryClientProvider>
+		</BrowserRouter >
 	)
 }
 

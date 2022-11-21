@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { HiPlusSm } from "react-icons/hi";
 import { MdOutlineLogout } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { Navigate, useNavigate } from "react-router-dom";
 import IconButton from "../../components/IconButton";
 import Task from "../../interfaces/Task";
 import TaskService from "../../services/TaskService";
@@ -13,49 +14,49 @@ import SearchInput from "./components/SearchInput/SearchInput";
 import * as C from "./style";
 
 export default function Home() {
-	const [tasks, setTasks] = useState<Task[]>([]);
-	const [isFetching, setIsFetching] = useState(true);
-	const [editing, setEditing] = useState<number | undefined>();
-	const [searchInput, setSearchInput] = useState('');
+	
+	const {data: tasks, isLoading, isError, isIdle} = useQuery<Task[]>('tasks', TaskService.listTasks);
+	
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		setIsFetching(true);
-		TaskService.listTasks()
-			.then(tasks => setTasks(tasks))
-			.then(() => setIsFetching(false))
-			.catch(ex => {
-				if (!ex.response?.ok) navigate('/login');
-			})
-	}, [])
+	const [isCreating, setIsCreating] = useState(false);
+	const [isEditing, setIsEditing] = useState<number | undefined>();
+	const [searchInput, setSearchInput] = useState('');
+
+	const editingTask = useMemo(() => tasks?.find(task => task.id === isEditing), [isEditing]);
+
+	if(isError) return <Navigate to={"/login"}></Navigate>;
+	if (isLoading || isIdle) return <Loading />;
+
 
 	const filteredTasks = tasks.filter(task => task.resume?.toLowerCase().includes(searchInput.trim().toLocaleLowerCase())
 		|| task.description?.toLocaleLowerCase().includes(searchInput.trim().toLocaleLowerCase()));
 
-	const editingTask = useMemo(() => (tasks.find(task => task.id === editing)), [editing, tasks]);
-
-
-	if (isFetching) return <Loading />;
 
 	return (
 		<C.Page>
 			<C.Section>
 				<C.Header>
 					<SearchInput value={searchInput} onChange={e => setSearchInput(e.target.value)} />
-					<C.CreateButton ><HiPlusSm /></C.CreateButton>
+					<C.CreateButton onClick={() => setIsCreating(true)}><HiPlusSm /></C.CreateButton>
 					<C.LogoutButton onClick={() => navigate('/login?logout')}><MdOutlineLogout /></C.LogoutButton>
 				</C.Header>
 				<C.TasksHolder>
-					{(searchInput ? filteredTasks : tasks).map(task => <Card onClickEdit={() => setEditing(task.id)} key={task.id} task={task} />)}
+					{(searchInput ? filteredTasks : tasks).map(task => <Card onClickEdit={() => setIsEditing(task.id)} key={task.id} task={task} />)}
 				</C.TasksHolder> 
 			</C.Section>
 			{
 				!!editingTask &&
 				<C.EditableCardContainer>
-					<EditableCard task={editingTask} onClickCloseTab={() => setEditing(undefined)}></EditableCard>
+					<EditableCard task={editingTask} onClickCloseTab={() => setIsEditing(undefined)}></EditableCard>
 				</C.EditableCardContainer>
 			}
-
+			{
+				isCreating && !editingTask &&
+				<C.EditableCardContainer>
+					<EditableCard task={{id: -1}} onClickCloseTab={() => setIsCreating(false)} creating></EditableCard>
+				</C.EditableCardContainer>
+			}
 		</C.Page>
 	)
 }

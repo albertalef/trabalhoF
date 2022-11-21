@@ -1,7 +1,9 @@
 import { MouseEventHandler, useMemo } from "react";
 import { AiOutlineCheck, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { TiArrowBackOutline } from 'react-icons/ti';
+import { useMutation, useQueryClient } from "react-query";
 import Task from "../../../../interfaces/Task";
+import useTaskController from "../../../../services/TaskController";
 import TaskService from "../../../../services/TaskService";
 import * as C from "./Card.style";
 
@@ -19,12 +21,10 @@ interface SelectProps {
 }
 
 export default function Card({ task, onClickEdit }: SelectProps) {
+
+    const {fetchDelete, fetchFinish, fetchUndoFinish} = useTaskController();
     const date = useMemo(() => new Date(task.createdAt || "").toLocaleDateString('pt-BR', dateFormatOptions), [task.createdAt]);
-
-    function handleDeleteTask() {
-        TaskService.deleteTask(task.id);
-    }
-
+   
     return (
         <C.Container>
             <C.CardWrapper finished={!!task.finishedAt}>
@@ -34,9 +34,12 @@ export default function Card({ task, onClickEdit }: SelectProps) {
                 <C.Description>{task.description}</C.Description>
             </C.CardWrapper>
             <C.Options tabIndex={-1}>
-                <C.Button tabIndex={-1} >{task.finishedAt ? <TiArrowBackOutline /> : <AiOutlineCheck />}</C.Button>
-                <C.Button tabIndex={-1} onClick={onClickEdit} hidden={!!task.finishedAt}><AiOutlineEdit /></C.Button>
-                <C.Button tabIndex={-1} onClick={handleDeleteTask}><AiOutlineDelete /></C.Button>
+                {task.finishedAt ?
+                    <C.Button tabIndex={-1} onClick={() => fetchUndoFinish(task.id)}><TiArrowBackOutline /></C.Button> :
+                    <C.Button tabIndex={-1} onClick={() => fetchFinish(task.id)}><AiOutlineCheck /></C.Button>
+                }
+                <C.Button tabIndex={-1} onClick={onClickEdit} ><AiOutlineEdit /></C.Button>
+                <C.Button tabIndex={-1} onClick={() => fetchDelete(task.id)}><AiOutlineDelete /></C.Button>
             </C.Options>
         </C.Container>
     )
