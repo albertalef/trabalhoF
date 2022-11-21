@@ -11,8 +11,9 @@ const IconButton = styled('button', {
 
     cursor: 'pointer',
 
+	flexShrink: 0,
 
-    
+    overflow: "hidden",
     '& svg': {
         display: 'block',
         fontSize: 26,

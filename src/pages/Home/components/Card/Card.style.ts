@@ -1,51 +1,9 @@
-import { MouseEventHandler, useMemo } from "react";
-import { AiOutlineCheck, AiOutlineCheckCircle, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { TiArrowBackOutline } from 'react-icons/ti';
-import IconButton from "../../../components/IconButton";
-import Task from "../../../interfaces/Task";
-import TaskService from "../../../services/TaskService";
-import { styled } from "../../../stitches.config";
+import { AiOutlineCheckCircle } from "react-icons/ai"
+import IconButton from "../../../../components/IconButton"
+import { styled } from "../../../../stitches.config"
 
 
-
-const dateFormatOptions: Intl.DateTimeFormatOptions = {
-    day: "numeric",
-    month: "numeric",
-    year: "2-digit"
-}
-
-interface SelectProps {
-    onClickEdit?: MouseEventHandler<HTMLButtonElement>,
-}
-
-export default function Card({ id, resume, description, createdAt, finishedAt, onClickEdit }: Task & SelectProps) {
-    const date = useMemo(() => new Date(createdAt || "").toLocaleDateString('pt-BR', dateFormatOptions), [createdAt]);
-
-    function handleDeleteTask(){
-        TaskService.deleteTask(id);
-    }
-
-    return (
-        <Container>
-            <CardWrapper finished={!!finishedAt}>
-                <FinishedIcon finished={!!finishedAt}/>
-                <DateField>{date}</DateField>
-                <Title>{resume}</Title>
-                <Description>{description}</Description>
-            </CardWrapper>
-            <Options tabIndex={-1}>
-                <Button tabIndex={-1} >{finishedAt ? <TiArrowBackOutline/> : <AiOutlineCheck/>}</Button>
-                <Button tabIndex={-1} onClick={onClickEdit}><AiOutlineEdit/></Button>
-                <Button tabIndex={-1} onClick={handleDeleteTask}><AiOutlineDelete/></Button>
-            </Options>
-        </Container>
-    )
-}
-
-
-
-
-const FinishedIcon = styled(AiOutlineCheckCircle, {
+export const FinishedIcon = styled(AiOutlineCheckCircle, {
     color: '#AFAFAF',
     fontSize: 20,
     fontWeight: 500,
@@ -64,18 +22,16 @@ const FinishedIcon = styled(AiOutlineCheckCircle, {
 })
 
 
-const DateField = styled('p', {
+export const DateField = styled('p', {
     color: '#AfAfAf',
     fontSize: "11px",
     fontWeight: "500",
     textAlign: "right",
     verticalAlign: 'bottom',
-
-
 })
 
 
-const Title = styled('h1', {
+export const Title = styled('h1', {
     color: '#3F3F3F',
     fontSize: 21,
     fontWeight: 700,
@@ -84,10 +40,11 @@ const Title = styled('h1', {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
+
 })
 
 
-const Description = styled('p', {
+export const Description = styled('p', {
     color: "#6f6f6f",
 
     fontSize: "15px",
@@ -103,9 +60,10 @@ const Description = styled('p', {
 
     width: "100%",
     height: 92,
+
 })
 
-const Button = styled(IconButton, {
+export const Button = styled(IconButton, {
 
     width: 35,
     height: 35,
@@ -117,11 +75,20 @@ const Button = styled(IconButton, {
         fontSize: 17,
     },
 
+    '@sm': {
+        width: 40,
+        height: 40,
+        '& svg': {
+            fontSize: 22,
+        },
+    }
 })
 
 
-const Options = styled('section', {
-    transition: 'left 80ms',
+export const Options = styled('section', {
+    transition: 'left 80ms, top 80ms',
+
+
 
     display: 'flex',
     flexDirection: 'column',
@@ -141,9 +108,20 @@ const Options = styled('section', {
 
     background: "#D0D0D0",
 
+    '@sm': {
+        borderRadius: '0px 0px 15px 15px',
+        flexDirection: 'row',
+        padding: 0,
+        paddingTop: 20,
+        height: '40%',
+        width: '100%',
+
+        left: 0,
+        top: '20%',
+    },
 })
 
-const CardWrapper = styled('div', {
+export const CardWrapper = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: "space-between",
@@ -163,41 +141,72 @@ const CardWrapper = styled('div', {
     height: 145,
 
     transition: 'background 80ms',
-	boxShadow: "0px 0px 8px 0px #00000030",
+    boxShadow: "0px 0px 8px 0px #00000030",
+
+    '@sm': {
+        gap: 9,
+        width: '100%',
+        padding: '10px 50px',
+        boxSizing: 'border-box',
+        boxShadow: "none",
+    },
 
     variants: {
         finished: {
             true: {
                 outline: "5px #DfDfDf solid",
+                '@sm': {
+                    outline: 'none'
+                }
             }
         }
     }
+
+
 })
 
-const Container = styled('section', {
+export const Container = styled('section', {
     display: 'inline-block',
     position: 'relative',
     zIndex: 0,
-    transition: 'transform ease 250ms',
+    transition: 'transform ease 250ms, margin 80ms',
 
-    
+
     '&:hover': {
         // transform: 'scale(101%)',
         zIndex: 1,
+        '@sm': {
+            marginBottom: '58px'
+        }
     },
 
 
 
     [`&:hover ${CardWrapper}`]: {
         background: '#EDEDED',
+        '@sm': {
+            background: '#F4F4F4',
+
+        }
     },
     [`&:hover ${Options}`]: {
         left: '94%',
+
+        '@sm': {
+            left: 0,
+            top: '86%'
+        }
+    },
+
+    '@sm': {
+        MsUserSelect: 'none',
+        WebKitUserSelect: 'none',
+        userSelect: 'none',
     },
 
     variants: {
         selected: {
-            true:{
+            true: {
                 transform: 'scale(0)',
             }
         }
