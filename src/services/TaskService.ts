@@ -1,7 +1,7 @@
 import axios from "axios";
 import Task from "../interfaces/Task";
 
-const axiosInstance = axios.create({baseURL: 'https://gototask-api.herokuapp.com'});
+const axiosInstance = axios.create({baseURL: 'https://gototask.herokuapp.com'});
 
 function getHeader() {
     const jwtToken = localStorage.getItem("jwt");

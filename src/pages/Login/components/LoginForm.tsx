@@ -1,6 +1,7 @@
 import { keyframes, styled } from "@stitches/react";
 import { FormEvent, useState } from "react";
 import { BiLoader } from 'react-icons/bi';
+import { useMutation } from "react-query";
 import { useNavigate } from 'react-router-dom';
 import AuthProvider from '../../../utils/AuthProvider';
 import InputBar from './InputBar';
@@ -14,15 +15,17 @@ export default function LoginForm() {
 	const [password, setPassword] = useState('');
 	const [usernameError, setUsernameError] = useState('');
 	const [passwordError, setPasswordError] = useState('');
-	const [isFetching, setIsFetching] = useState(false);
+
+	const { mutate: tryLogin, isLoading} = useMutation(() => AuthProvider.attemptLogin(username, password), {
+		onSuccess: () => navigate('/tasks'),
+		onError: () => setPasswordError('Wrong password')
+	})
 
 	async function attemptLogin(event: FormEvent<HTMLFormElement>) {
-		setIsFetching(true);
 		event.preventDefault();
 		if (!username) setUsernameError('This field cannot be empty!');
 		if (!password) setPasswordError('This field cannot be empty!');
-		if (username && password) await AuthProvider.attemptLogin(username, password).then(() => navigate('/')).catch(() => { setPasswordError('Wrong password') });
-		setIsFetching(false);
+		if (username && password) tryLogin();
 	}
 
 
@@ -46,7 +49,7 @@ export default function LoginForm() {
 					canHide
 				/>
 			</InputHolder>
-			<Button loading={isFetching} type='submit'>Confirm <BiLoader /></Button>
+			<Button loading={isLoading} type='submit'>Confirm <BiLoader /></Button>
 		</Form>
 	)
 }   

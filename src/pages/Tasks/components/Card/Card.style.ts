@@ -146,7 +146,9 @@ export const CardWrapper = styled('div', {
     '@sm': {
         gap: 9,
         width: '100%',
+        height: 180,
         padding: '10px 50px',
+        paddingBottom: 20,
         boxSizing: 'border-box',
         boxShadow: "none",
     },
@@ -171,7 +173,6 @@ export const Container = styled('section', {
     zIndex: 0,
     transition: 'transform ease 250ms, margin 80ms',
 
-
     '&:hover': {
         // transform: 'scale(101%)',
         zIndex: 1,
@@ -179,8 +180,6 @@ export const Container = styled('section', {
             marginBottom: '58px'
         }
     },
-
-
 
     [`&:hover ${CardWrapper}`]: {
         background: '#EDEDED',
@@ -202,6 +201,8 @@ export const Container = styled('section', {
         MsUserSelect: 'none',
         WebKitUserSelect: 'none',
         userSelect: 'none',
+        responsiveWidth: 1100,
+
     },
 
     variants: {

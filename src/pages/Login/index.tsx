@@ -1,25 +1,26 @@
 import { styled } from "@stitches/react";
 import { useEffect, useState } from "react";
+import { useMutation } from "react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AuthProvider from "../../utils/AuthProvider";
+import Loading from "../Loading";
 import LoginForm from "./components/LoginForm";
 
 export default function Login(){
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const [isLoading, setIsLoading] = useState(true);
+    const {mutate: validate, isLoading, isIdle} = useMutation(AuthProvider.validate, {
+        onSuccess: () => navigate('/tasks'),
+    })
 
     useEffect(() => {
         if(searchParams.has('logout')) AuthProvider.logout();
-        
-		AuthProvider.validate()
-		.then(() => navigate('/'))
-		.catch(() => setIsLoading(false));
+        validate();
 	}, [])
 
     return(
         <Section>
-            {isLoading ? <h1>Loading</h1> : <LoginForm/>}
+            {isLoading || isIdle ? <Loading/> : <LoginForm/>}
         </Section>
     )
 }

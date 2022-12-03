@@ -18,9 +18,10 @@ const dateFormatOptions: Intl.DateTimeFormatOptions = {
 interface SelectProps {
     onClickEdit?: MouseEventHandler<HTMLButtonElement>,
     task: Task,
+    disable?: boolean,
 }
 
-export default function Card({ task, onClickEdit }: SelectProps) {
+export default function Card({ task, onClickEdit, disable }: SelectProps) {
 
     const {fetchDelete, fetchFinish, fetchUndoFinish} = useTaskController();
     const date = useMemo(() => new Date(task.createdAt || "").toLocaleDateString('pt-BR', dateFormatOptions), [task.createdAt]);
@@ -35,11 +36,11 @@ export default function Card({ task, onClickEdit }: SelectProps) {
             </C.CardWrapper>
             <C.Options tabIndex={-1}>
                 {task.finishedAt ?
-                    <C.Button tabIndex={-1} onClick={() => fetchUndoFinish(task.id)}><TiArrowBackOutline /></C.Button> :
-                    <C.Button tabIndex={-1} onClick={() => fetchFinish(task.id)}><AiOutlineCheck /></C.Button>
+                    <C.Button tabIndex={-1} onClick={() => {if(!disable) fetchUndoFinish(task.id)}}><TiArrowBackOutline /></C.Button> :
+                    <C.Button tabIndex={-1} onClick={() => {if(!disable) fetchFinish(task.id)}}><AiOutlineCheck /></C.Button>
                 }
-                <C.Button tabIndex={-1} onClick={onClickEdit} ><AiOutlineEdit /></C.Button>
-                <C.Button tabIndex={-1} onClick={() => fetchDelete(task.id)}><AiOutlineDelete /></C.Button>
+                <C.Button tabIndex={-1} onClick={(e) => {if(!disable) onClickEdit?.(e)}} ><AiOutlineEdit /></C.Button>
+                <C.Button tabIndex={-1} onClick={() => {if(!disable) fetchDelete(task.id)}}><AiOutlineDelete /></C.Button>
             </C.Options>
         </C.Container>
     )

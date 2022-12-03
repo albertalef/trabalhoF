@@ -28,6 +28,8 @@ export default function InputBar({ id, name, error, type, value, onChange, canHi
                 <Input
                     id={id || "input-" + name.toLocaleLowerCase()}
                     autoComplete="off"
+                    autoCapitalize="none"
+                    autoCorrect="off"
                     placeholder={name}
                     type={type == 'password' && (!showPassword && canHide) ? 'password' : 'text'}
                     value={value}
