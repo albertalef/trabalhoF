@@ -173,29 +173,29 @@ export const Container = styled('section', {
     zIndex: 0,
     transition: 'transform ease 250ms, margin 80ms',
 
-    '&:hover': {
-        // transform: 'scale(101%)',
-        zIndex: 1,
-        '@sm': {
-            marginBottom: '58px'
-        }
-    },
+    // '&:hover': {
+    //     // transform: 'scale(101%)',
+    //     zIndex: 1,
+    //     '@sm': {
+    //         marginBottom: '58px'
+    //     }
+    // },
 
-    [`&:hover ${CardWrapper}`]: {
-        background: '#EDEDED',
-        '@sm': {
-            background: '#F4F4F4',
+    // [`&:hover ${CardWrapper}`]: {
+    //     background: '#EDEDED',
+    //     '@sm': {
+    //         background: '#F4F4F4',
 
-        }
-    },
-    [`&:hover ${Options}`]: {
-        left: '94%',
+        // }
+    // },
+    // [`&:hover ${Options}`]: {
+    //     left: '94%',
 
-        '@sm': {
-            left: 0,
-            top: '86%'
-        }
-    },
+    //     '@sm': {
+    //         left: 0,
+    //         top: '86%'
+    //     }
+    // },
 
     '@sm': {
         MsUserSelect: 'none',
@@ -208,7 +208,27 @@ export const Container = styled('section', {
     variants: {
         selected: {
             true: {
-                transform: 'scale(0)',
+                zIndex: 1,
+
+                [`${CardWrapper}`]: {
+                    background: '#EDEDED',
+                    '@sm': {
+                        background: '#F4F4F4',
+            
+                    }
+                },
+                [`${Options}`]: {
+                    left: '94%',
+            
+                    '@sm': {
+                        left: 0,
+                        top: '86%'
+                    }
+                },
+
+                '@sm': {
+                    marginBottom: '58px'
+                }
             }
         }
     }

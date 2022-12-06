@@ -38,13 +38,14 @@ export default function Products() {
 
 const Wrapper = styled('section', {
     width: '100%',
-    padding: '200px 0',
+    height: 'calc(100vh - 72px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
 
 
     '@sm': {
+        height: 'unset',
         padding: '30px 0',
         paddingTop: '10px',
         paddingBottom: 100,
@@ -71,7 +72,7 @@ const TaskHolder = styled('div', {
     gap: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
+    height: 550,
 
     '@sm': {
         responsiveWidth: 550,

@@ -13,9 +13,9 @@ export const TasksHolder = styled('section', {
 	width: '90%',
 
 	'@sm': {
-		gap: 5,
+		gap: 10,
 		padding: 0,
-		paddingTop: '68px',
+		paddingTop: '72px',
 		flexDirection: "column",
 		width: '100%',
 	}

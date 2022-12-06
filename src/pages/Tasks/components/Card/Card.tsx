@@ -1,7 +1,8 @@
-import { MouseEventHandler, useMemo } from "react";
+import { MouseEventHandler, useMemo, useState } from "react";
 import { AiOutlineCheck, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { TiArrowBackOutline } from 'react-icons/ti';
 import { useMutation, useQueryClient } from "react-query";
+import useWindowDimensions from "../../../../hooks/UseWindowDimensions";
 import Task from "../../../../interfaces/Task";
 import useTaskController from "../../../../services/TaskController";
 import TaskService from "../../../../services/TaskService";
@@ -22,13 +23,16 @@ interface SelectProps {
 }
 
 export default function Card({ task, onClickEdit, disable }: SelectProps) {
-
+    const isMobile = useWindowDimensions().width < 1100;
+    const [isSelected, setIsSelected] = useState(false);
     const {fetchDelete, fetchFinish, fetchUndoFinish} = useTaskController();
-    const date = useMemo(() => new Date(task.createdAt || "").toLocaleDateString('pt-BR', dateFormatOptions), [task.createdAt]);
+    const date = useMemo(() => new Date(task.createdAt || "").toLocaleDateString('pt-BR', dateFormatOptions), [task.createdAt])
+
+
    
     return (
-        <C.Container>
-            <C.CardWrapper finished={!!task.finishedAt}>
+        <C.Container onMouseEnter={() => setIsSelected(!isSelected)} onMouseLeave={() => setIsSelected(false)} selected={isSelected}>
+            <C.CardWrapper finished={!!task.finishedAt} onClick={() => {if(isMobile) setIsSelected(!isSelected)}}>
                 <C.FinishedIcon finished={!!task.finishedAt} />
                 <C.DateField>{date}</C.DateField>
                 <C.Title>{task.resume}</C.Title>
